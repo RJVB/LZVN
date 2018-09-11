@@ -53,10 +53,12 @@ int main(int argc, const char * argv[])
 	{
 		printf("Usage (encode): lzvn <infile> <outfile>\n");
 		printf("Usage (decode): lzvn -d <infile> <outfile>\n");
+#ifdef __APPLE__
 		printf("Usage (decode): lzvn -d <path/prelinkedkernel> kernel\n");
 		printf("Usage (decode): lzvn -d <path/prelinkedkernel> dictionary\n");
 		printf("Usage (decode): lzvn -d <path/prelinkedkernel> kexts\n");
 		printf("Usage (decode): lzvn -d <path/prelinkedkernel> list\n");
+#endif
 		exit(-1);
 	}
 	else
@@ -94,6 +96,7 @@ int main(int argc, const char * argv[])
 					fread(fileBuffer, fileLength, 1, fp);
 					fclose(fp);
 
+#ifdef __APPLE__
 					// Check for a FAT header.
 					fatHeader = (struct fat_header *) fileBuffer;
 
@@ -126,7 +129,9 @@ int main(int argc, const char * argv[])
 						}
 					}
 					else
+#endif
 					{
+#ifdef __APPLE__
 						prelinkHeader = (PrelinkedKernelHeader *)(unsigned char *)fileBuffer;
 						
 						if (prelinkHeader->signature == OSSwapInt32('comp') && prelinkHeader->compressType == OSSwapInt32('lzvn'))
@@ -136,6 +141,7 @@ int main(int argc, const char * argv[])
 							fileLength = OSSwapInt32(prelinkHeader->compressedSize);
 						}
 						else
+#endif
 						{
 							// printf("Getting WorkSpaceSize\n");
 							workSpaceSize = lzvn_encode_work_size();
@@ -158,6 +164,7 @@ int main(int argc, const char * argv[])
 
 							if (compressedSize > 0)
 							{
+#ifdef __APPLE__
 								// Are we unpacking a prelinkerkernel?
 								if (is_prelinkedkernel(workSpaceBuffer))
 								{
@@ -212,6 +219,7 @@ int main(int argc, const char * argv[])
 									}
 								}
 								else
+#endif
 								{
 									printf("Decoding data ...\nWriting data to: %s\n", argv[3]);
 									fwrite(workSpaceBuffer, 1, compressedSize, fp);
@@ -296,6 +304,7 @@ int main(int argc, const char * argv[])
 						}
 						else
 						{
+#ifdef __APPLE__
 							// Check for a FAT header.
 							fatHeader = (struct fat_header *) fileBuffer;
 							
@@ -304,6 +313,7 @@ int main(int argc, const char * argv[])
 								fatArch = (struct fat_arch *)(fileBuffer + sizeof(fatHeader));
 								offset = OSSwapInt32(fatArch->offset);
 							}
+#endif
 							
 							file_adler32 = local_adler32((fileBuffer + offset), fileLength);
 							printf("adler32......: 0x%08lx\n", file_adler32);
@@ -322,6 +332,7 @@ int main(int argc, const char * argv[])
 
 								fp = fopen (argv[2], "wb");
 
+#ifdef __APPLE__
 								// Do we need to inject the mach header?
 								if (is_prelinkedkernel(fileBuffer + offset))
 								{
@@ -340,6 +351,7 @@ int main(int argc, const char * argv[])
 
 									fwrite(gFileHeader, (sizeof(gFileHeader) / sizeof(u_int32_t)), 4, fp);
 								}
+#endif
 
 								printf("Writing workspace buffer ...\n");
 

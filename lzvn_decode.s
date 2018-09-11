@@ -1,8 +1,8 @@
 .text
 
-.globl _lzvn_decode
+.globl lzvn_decode
 
-_lzvn_decode:
+lzvn_decode:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	pushq	%rbx

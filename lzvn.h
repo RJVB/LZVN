@@ -24,6 +24,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#ifdef __APPLE__
+
 #include <mach-o/fat.h>
 #include <mach-o/loader.h>
 #include <mach/machine.h>
@@ -33,6 +35,16 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOCFUnserialize.h>
+
+#else // !APPLE
+
+#include <stddef.h>
+
+typedef unsigned char boolean_t;
+#define FALSE 0
+#define TRUE  (!FALSE)
+
+#endif
 
 #include "FastCompression.h"
 #include "prelink.h"
@@ -109,6 +121,7 @@ u_int32_t local_adler32(u_int8_t * buffer, int32_t length)
 
 
 //==============================================================================
+#ifdef __APPLE__
 
 struct load_command * find_load_command(struct mach_header_64 *machHeader, uint32_t targetCmd)
 {
@@ -299,7 +312,7 @@ uint8_t saveDictionary(unsigned char * aFileBuffer)
 	return 0;
 }
 
-
+#endif //__APPLE__
 //==============================================================================
 
 int _mkdir(char * aDirectory, mode_t aMode)
@@ -348,7 +361,7 @@ int _mkdir(char * aDirectory, mode_t aMode)
 
 
 //==============================================================================
-
+#ifdef __APPLE__
 uint8_t saveKexts(unsigned char * aFileBuffer)
 {
 	int signedKexts = 0;
@@ -602,6 +615,7 @@ uint8_t listKexts(unsigned char * aFileBuffer)
 	return 0;
 }
 
+#endif //__APPLE__
 //==============================================================================
 
 void openFile(char * aFilename)

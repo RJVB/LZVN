@@ -1,9 +1,9 @@
 .text
 
-.globl _lzvn_encode
-.globl _lzvn_encode_work_size
+.globl lzvn_encode
+.globl lzvn_encode_work_size
 
-_lzvn_encode:
+lzvn_encode:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	pushq	%rbx
@@ -13,7 +13,7 @@ _lzvn_encode:
 	movq	$0x0, -0x10(%rbp)
 	leaq	-0x10(%rbp), %r8
 	movq	%rax, %r9
-	callq	_lzvn_encode_partial
+	callq	lzvn_encode_partial
 	xorl	%ecx, %ecx
 	cmpq	%rbx, -0x10(%rbp)
 	cmoveq	%rax, %rcx
@@ -23,7 +23,7 @@ _lzvn_encode:
 	popq	%rbp
 	retq
 
-_lzvn_encode_partial:
+lzvn_encode_partial:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	pushq	%r15
@@ -1214,7 +1214,7 @@ Lzvn_80830:
 	movq	%r13, %rdx
 	movq	%r11, %rbx
 	movq	%r8, %r12
-	callq	_memcpy
+	callq	memcpy
 	movq	%r12, %r8
 	movq	-0xb0(%rbp), %r12
 	movq	%rbx, %r11
@@ -1238,7 +1238,7 @@ Lzvn_80897:
 	movq	%r14, %rdx
 	movq	%r11, %r15
 	movq	%r8, %rbx
-	callq	_memcpy
+	callq	memcpy
 	movq	%rbx, %r8
 	movq	%r15, %r11
 	leaq	0x1(%r14,%r8), %r8
@@ -1286,7 +1286,7 @@ Lzvn_8092c:
 	popq	%rbp
 	retq
 
-_lzvn_encode_work_size:
+lzvn_encode_work_size:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	movl	$0x80000, %eax
