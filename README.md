@@ -23,7 +23,14 @@ Make instructions
 
 ```
 make
-``` 
+```
+
+on Mac, or
+
+```
+make -f Makefile.unix
+```
+
 
 Note: You don't need to run: ```make clean``` first because that is done automatically.
 
@@ -46,6 +53,17 @@ make -f Makefile.unix install
 
 Note: The executable will be copied to: /usr/local/bin
 
+
+Alternatively you can use cmake:
+
+```
+mkdir build
+cmake ..
+make
+make install
+```
+
+This should work on Mac and other Unix variants. In addition this will build a shared and a static version of the FastCompression library.
 
 Usage
 -----
