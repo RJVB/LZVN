@@ -25,6 +25,7 @@
 #ifdef HAS_FULLVERSION
 #   include "lzvn_fullversion.h"
 #endif
+#include <errno.h>
 
 //==============================================================================
 
@@ -77,7 +78,7 @@ int main(int argc, const char * argv[])
 			// Check file pointer.
 			if (fp == NULL)
 			{
-				printf("Error: Opening of %s failed... exiting\nDone.\n", argv[1]);
+				printf("Error: Opening of %s failed (%s)... exiting\nDone.\n", argv[1], strerror(errno));
 				exit(-1);
 			}
 			else
@@ -260,7 +261,7 @@ int main(int argc, const char * argv[])
 
 			if (fp == NULL)
 			{
-				printf("Error: Opening of %s failed... exiting\nDone.\n", argv[1]);
+				printf("Error: Opening of %s failed (%s)... exiting\nDone.\n", argv[1], strerror(errno));
 				exit(-1);
 			}
 			else
@@ -337,32 +338,40 @@ int main(int argc, const char * argv[])
 
 								fp = fopen (argv[2], "wb");
 
+                                if (fp)
+                                {
 #ifdef __APPLE__
-								// Do we need to inject the mach header?
-								if (is_prelinkedkernel(fileBuffer + offset))
-								{
-									printf("Fixing file header for prelinkedkernel ...\n");
+                                    // Do we need to inject the mach header?
+                                    if (is_prelinkedkernel(fileBuffer + offset))
+                                    {
+                                        printf("Fixing file header for prelinkedkernel ...\n");
 
-									// Inject arch offset into the header.
-									gFileHeader[5] = OSSwapInt32(sizeof(gFileHeader) + outSize - 28);
-									// Inject the value of file_adler32 into the header.
-									gFileHeader[9] = OSSwapInt32(file_adler32);
-									// Inject the uncompressed size into the header.
-									gFileHeader[10] = OSSwapInt32(fileLength);
-									// Inject the compressed size into the header.
-									gFileHeader[11] = OSSwapInt32(compressedSize);
+                                        // Inject arch offset into the header.
+                                        gFileHeader[5] = OSSwapInt32(sizeof(gFileHeader) + outSize - 28);
+                                        // Inject the value of file_adler32 into the header.
+                                        gFileHeader[9] = OSSwapInt32(file_adler32);
+                                        // Inject the uncompressed size into the header.
+                                        gFileHeader[10] = OSSwapInt32(fileLength);
+                                        // Inject the compressed size into the header.
+                                        gFileHeader[11] = OSSwapInt32(compressedSize);
 
-									printf("Writing fixed up file header ...\n");
+                                        printf("Writing fixed up file header ...\n");
 
-									fwrite(gFileHeader, (sizeof(gFileHeader) / sizeof(u_int32_t)), 4, fp);
-								}
+                                        fwrite(gFileHeader, (sizeof(gFileHeader) / sizeof(u_int32_t)), 4, fp);
+                                    }
 #endif
 
-								printf("Writing workspace buffer ...\n");
+                                    printf("Writing workspace buffer ...\n");
 
-								fwrite(workSpaceBuffer, outSize, 1, fp);
-								fclose(fp);
-								printf("Done.\n");
+                                    fwrite(workSpaceBuffer, outSize, 1, fp);
+                                    fclose(fp);
+                                    printf("Done.\n");
+                                }
+                                else
+                                {
+                                    fprintf(stderr, "Error opening output file '%s': %s\n", argv[2], strerror(errno));
+                                    exit(-1);
+                                }
 							}
 						}
 
