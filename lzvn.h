@@ -15,6 +15,9 @@
  *			- Show number of signed and unsigned kexts.
  */
 
+#ifndef _LZVN_H
+#define _LZVN_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -628,3 +631,5 @@ void openFile(char * aFilename)
 		exit(-1);
 	}
 }
+
+#endif // _LZVN_H
