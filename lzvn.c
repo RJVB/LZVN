@@ -32,6 +32,7 @@
 int main(int argc, const char * argv[])
 {
 	FILE *fp								= NULL;
+	FILE *ofp								= NULL;
 
 	unsigned char * fileBuffer				= NULL;
 	unsigned char * workSpaceBuffer			= NULL;
@@ -258,12 +259,18 @@ int main(int argc, const char * argv[])
 		else // Do we need to encode a file?
 		{
 			fp = fopen(argv[1], "rb");
+            ofp = fopen (argv[2], "wb");
 
 			if (fp == NULL)
 			{
 				printf("Error: Opening of %s failed (%s)... exiting\nDone.\n", argv[1], strerror(errno));
 				exit(-1);
 			}
+			else if (ofp == NULL)
+            {
+                fprintf(stderr, "Error opening output file '%s': %s\n", argv[2], strerror(errno));
+                exit(-1);
+            }
 			else
 			{
 				fseek(fp, 0, SEEK_END);
@@ -336,42 +343,33 @@ int main(int argc, const char * argv[])
 								compressedSize = bufend - workSpaceBuffer;
 								printf("compressedSize.....: %ld/0x%08lx\n", compressedSize, compressedSize);
 
-								fp = fopen (argv[2], "wb");
-
-                                if (fp)
-                                {
 #ifdef __APPLE__
-                                    // Do we need to inject the mach header?
-                                    if (is_prelinkedkernel(fileBuffer + offset))
-                                    {
-                                        printf("Fixing file header for prelinkedkernel ...\n");
+                                // Do we need to inject the mach header?
+                                if (is_prelinkedkernel(fileBuffer + offset))
+                                {
+                                    printf("Fixing file header for prelinkedkernel ...\n");
 
-                                        // Inject arch offset into the header.
-                                        gFileHeader[5] = OSSwapInt32(sizeof(gFileHeader) + outSize - 28);
-                                        // Inject the value of file_adler32 into the header.
-                                        gFileHeader[9] = OSSwapInt32(file_adler32);
-                                        // Inject the uncompressed size into the header.
-                                        gFileHeader[10] = OSSwapInt32(fileLength);
-                                        // Inject the compressed size into the header.
-                                        gFileHeader[11] = OSSwapInt32(compressedSize);
+                                    // Inject arch offset into the header.
+                                    gFileHeader[5] = OSSwapInt32(sizeof(gFileHeader) + outSize - 28);
+                                    // Inject the value of file_adler32 into the header.
+                                    gFileHeader[9] = OSSwapInt32(file_adler32);
+                                    // Inject the uncompressed size into the header.
+                                    gFileHeader[10] = OSSwapInt32(fileLength);
+                                    // Inject the compressed size into the header.
+                                    gFileHeader[11] = OSSwapInt32(compressedSize);
 
-                                        printf("Writing fixed up file header ...\n");
+                                    printf("Writing fixed up file header ...\n");
 
-                                        fwrite(gFileHeader, (sizeof(gFileHeader) / sizeof(u_int32_t)), 4, fp);
-                                    }
+                                    fwrite(gFileHeader, (sizeof(gFileHeader) / sizeof(u_int32_t)), 4, ofp);
+                                }
 #endif
 
-                                    printf("Writing workspace buffer ...\n");
+                                printf("Writing workspace buffer ...\n");
 
-                                    fwrite(workSpaceBuffer, outSize, 1, fp);
-                                    fclose(fp);
-                                    printf("Done.\n");
-                                }
-                                else
-                                {
-                                    fprintf(stderr, "Error opening output file '%s': %s\n", argv[2], strerror(errno));
-                                    exit(-1);
-                                }
+                                fwrite(workSpaceBuffer, outSize, 1, ofp);
+                                fclose(ofp);
+                                ofp = NULL;
+                                printf("Done.\n");
 							}
 						}
 
@@ -385,6 +383,13 @@ int main(int argc, const char * argv[])
 			}
 		}
 	}
+
+	if (ofp)
+    {
+        // a compression operation was aborted; cleanup
+        fclose(ofp);
+        unlink(argv[2]);
+    }
 
 	exit(-1);
 }
