@@ -13,20 +13,22 @@ AR=ar
 CC=cc
 RANLIB=ranlib
 INSTALL=install
-ASFLAGS=-arch x86_64
+ASFLAGS=-g
 ARFLAGS=cru
-CFLAGS=-arch x86_64 -O2
-FRAMEWORKS=-framework IOKit -framework CoreFoundation
+CFLAGS=-O3 -g
+#FRAMEWORKS=-framework IOKit -framework CoreFoundation
 
 all: clean lzvn
 
 .s.o:
-	$(AS) $(ASFLAGS) -o $@ $<
+	$(AS) $(ASFLAGS) -o $@ -c $<
 .S.o:
 	$(AS) $(ASFLAGS) -DMEMCPY=memcpy -o $@ -c $<
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
+
+# lzvn_encode.o: lzvn_encode.S
 
 libFastCompression.a: lzvn_encode.o lzvn_decode.o
 	$(AR) $(ARFLAGS) $@ lzvn_encode.o lzvn_decode.o

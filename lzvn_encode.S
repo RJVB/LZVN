@@ -1214,7 +1214,7 @@ Lzvn_80830:
 	movq	%r13, %rdx
 	movq	%r11, %rbx
 	movq	%r8, %r12
-	callq	memcpy
+	callq	MEMCPY
 	movq	%r12, %r8
 	movq	-0xb0(%rbp), %r12
 	movq	%rbx, %r11
@@ -1238,7 +1238,7 @@ Lzvn_80897:
 	movq	%r14, %rdx
 	movq	%r11, %r15
 	movq	%r8, %rbx
-	callq	memcpy
+	callq	MEMCPY
 	movq	%rbx, %r8
 	movq	%r15, %r11
 	leaq	0x1(%r14,%r8), %r8

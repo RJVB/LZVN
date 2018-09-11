@@ -22,7 +22,9 @@
  */
 
 #include "lzvn.h"
-
+#ifdef HAS_FULLVERSION
+#   include "lzvn_fullversion.h"
+#endif
 
 //==============================================================================
 
@@ -51,6 +53,9 @@ int main(int argc, const char * argv[])
 
 	if (argc < 3 || argc > 4)
 	{
+#ifdef LZVN_FULL_VERSION_STRING
+        printf("lzvn version %s\n", LZVN_FULL_VERSION_STRING);
+#endif
 		printf("Usage (encode): lzvn <infile> <outfile>\n");
 		printf("Usage (decode): lzvn -d <infile> <outfile>\n");
 #ifdef __APPLE__
