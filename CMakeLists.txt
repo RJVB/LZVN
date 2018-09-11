@@ -15,11 +15,9 @@ add_library(FastCompression SHARED lzvn_decode.S lzvn_encode.S)
 set_target_properties(FastCompression PROPERTIES
     VERSION "${lzvn_VERSION_MAJOR}.${lzvn_VERSION_MINOR}"
     SOVERSION "${lzvn_VERSION_MAJOR}"
-    EXPORT_NAME FastCompression
-    COMPILE_DEFINITIONS MEMCPY=memcpy@plt)
+    EXPORT_NAME FastCompression)
 add_library(FastCompression_static STATIC lzvn_decode.S lzvn_encode.S)
 set_target_properties(FastCompression_static PROPERTIES
-    COMPILE_DEFINITIONS MEMCPY=memcpy
     OUTPUT_NAME FastCompression)
 
 git_describe(GIT_FULL_VERSION "--tags")

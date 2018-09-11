@@ -1,6 +1,6 @@
 .text
 
-#ifdef __APPLE__
+#ifndef linux
 #define LZVN_DECODE _lzvn_decode
 #else
 #define LZVN_DECODE lzvn_decode
