@@ -13,9 +13,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 set(CMAKE_ASM_CREATE_SHARED_LIBRARY ${CMAKE_C_CREATE_SHARED_LIBRARY})
 add_library(FastCompression SHARED lzvn_decode.S lzvn_encode.S)
 set_target_properties(FastCompression PROPERTIES
-    VERSION "${lzvn_VERSION_MAJOR}.${lzvn_VERSION_MINOR}"
-    SOVERSION "${lzvn_VERSION_MAJOR}"
-    EXPORT_NAME FastCompression)
+    VERSION ${lzvn_FULL_VERSION_MAJOR}.${lzvn_VERSION_MINOR}
+    SOVERSION ${lzvn_VERSION_MAJOR})
 add_library(FastCompression_static STATIC lzvn_decode.S lzvn_encode.S)
 set_target_properties(FastCompression_static PROPERTIES
     OUTPUT_NAME FastCompression)
@@ -47,7 +46,7 @@ if(APPLE)
     target_link_libraries(lzvn "-framework IOKit -framework CoreFoundation")
 endif()
 
-install(TARGETS FastCompression FastCompression_static lzvn
+install(TARGETS FastCompression FastCompression_static lzvn lzvns
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
