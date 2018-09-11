@@ -37,6 +37,13 @@ You can install the executable with:
 make install
 ```
 
+or (on other Unix variants):
+
+```
+make -f Makefile.unix install
+```
+
+
 Note: The executable will be copied to: /usr/local/bin
 
 
@@ -46,6 +53,11 @@ Usage
 ```
 ./lzvn <uncompressed filename> <compressed filename>
 ./lzvn -d <compressed filename> <uncompressed filename>
+```
+
+On Mac OS there are additional options:
+
+```
 ./lzvn -d <path/prelinkedkernel> kernel
 ./lzvn -d <path/prelinkedkernel> dictionary
 ./lzvn -d <path/prelinkedkernel> kexts
