@@ -1,9 +1,19 @@
 .text
 
-.globl lzvn_encode
-.globl lzvn_encode_work_size
+#ifdef __APPLE__
+#define LZVN_ENCODE _lzvn_encode
+#define LZVN_ENCODE_WORK_SIZE _lzvn_encode_work_size
+#undef MEMCPY
+#define MEMCPY _memcpy
+#else
+#define LZVN_ENCODE lzvn_encode
+#define LZVN_ENCODE_WORK_SIZE lzvn_encode_work_size
+#endif
 
-lzvn_encode:
+.globl LZVN_ENCODE
+.globl LZVN_ENCODE_WORK_SIZE
+
+LZVN_ENCODE:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	pushq	%rbx
@@ -1286,7 +1296,7 @@ Lzvn_8092c:
 	popq	%rbp
 	retq
 
-lzvn_encode_work_size:
+LZVN_ENCODE_WORK_SIZE:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	movl	$0x80000, %eax

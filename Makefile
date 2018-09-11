@@ -23,6 +23,9 @@ all: clean lzvn
 .s.o:
 	$(AS) $(ASFLAGS) -o $@ $<
 .S.o:
+	$(AS) $(ASFLAGS) -o $@ -c $<
+
+lzvn_encode.o: lzvn_encode.S
 	$(AS) $(ASFLAGS) -DMEMCPY=memcpy -o $@ -c $<
 
 .c.o:

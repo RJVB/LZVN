@@ -1,8 +1,14 @@
 .text
 
-.globl lzvn_decode
+#ifdef __APPLE__
+#define LZVN_DECODE _lzvn_decode
+#else
+#define LZVN_DECODE lzvn_decode
+#endif
 
-lzvn_decode:
+.globl LZVN_DECODE
+
+LZVN_DECODE:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	pushq	%rbx

@@ -23,12 +23,13 @@ all: clean lzvn
 .s.o:
 	$(AS) $(ASFLAGS) -o $@ -c $<
 .S.o:
+	$(AS) $(ASFLAGS) -o $@ -c $<
+
+lzvn_encode.o: lzvn_encode.S
 	$(AS) $(ASFLAGS) -DMEMCPY=memcpy -o $@ -c $<
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# lzvn_encode.o: lzvn_encode.S
 
 libFastCompression.a: lzvn_encode.o lzvn_decode.o
 	$(AR) $(ARFLAGS) $@ lzvn_encode.o lzvn_decode.o
