@@ -47,8 +47,9 @@ int main(int argc, const char * argv[])
 	
 	unsigned long fileLength				= 0;
 	unsigned long byteshandled				= 0;
+#ifdef __APPLE__
 	unsigned long file_adler32				= 0;
-	unsigned long buffer_adler32			= 0;
+#endif
 
 	size_t compressedSize					= 0;
 	size_t workSpaceSize					= 0;
@@ -326,10 +327,10 @@ int main(int argc, const char * argv[])
 								fatArch = (struct fat_arch *)(fileBuffer + sizeof(fatHeader));
 								offset = OSSwapInt32(fatArch->offset);
 							}
-#endif
 							
 							file_adler32 = local_adler32((fileBuffer + offset), fileLength);
 							printf("adler32......: 0x%08lx\n", file_adler32);
+#endif
 
 
 							size_t outSize = lzvn_encode(workSpaceBuffer, workSpaceSize, (u_int8_t *)(fileBuffer + offset), (size_t)fileLength, workSpace);
