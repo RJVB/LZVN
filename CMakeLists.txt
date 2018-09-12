@@ -62,4 +62,4 @@ install(TARGETS FastCompression FastCompression_static lzvn
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
 )
-install(FILES lzvn.h DESTINATION include)
+install(FILES lzvn.h FastCompression.h DESTINATION include)
