@@ -326,10 +326,12 @@ int main(int argc, const char * argv[])
 							{
 								fatArch = (struct fat_arch *)(fileBuffer + sizeof(fatHeader));
 								offset = OSSwapInt32(fatArch->offset);
-							}
+                                printf("fat header detected, offset=%u, nstructs=%d\n",
+                                       offset, OSSwapInt32(fatHeader->nfat_arch));
 							
-							file_adler32 = local_adler32((fileBuffer + offset), fileLength);
-							printf("adler32......: 0x%08lx\n", file_adler32);
+                                file_adler32 = local_adler32((fileBuffer + offset), fileLength);
+                                printf("adler32......: 0x%08lx\n", file_adler32);
+							}
 #endif
 
 
@@ -346,7 +348,7 @@ int main(int argc, const char * argv[])
 
 #ifdef __APPLE__
                                 // Do we need to inject the mach header?
-                                if (is_prelinkedkernel(fileBuffer + offset))
+                                if (fatHeader->magic == FAT_CIGAM && is_prelinkedkernel(fileBuffer + offset))
                                 {
                                     printf("Fixing file header for prelinkedkernel ...\n");
 
