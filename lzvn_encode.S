@@ -1,12 +1,11 @@
 .text
 
-#ifndef linux
 #define LZVN_ENCODE _lzvn_encode
 #define LZVN_ENCODE_WORK_SIZE _lzvn_encode_work_size
+
+#ifndef linux
 #define MEMCPY _memcpy
 #else
-#define LZVN_ENCODE lzvn_encode
-#define LZVN_ENCODE_WORK_SIZE lzvn_encode_work_size
 #define MEMCPY memcpy@plt
 #endif
 

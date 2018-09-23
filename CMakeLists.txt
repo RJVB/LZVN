@@ -11,16 +11,12 @@ include(CMakeDetermineASMCompiler)
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 
 set(CMAKE_ASM_CREATE_SHARED_LIBRARY ${CMAKE_C_CREATE_SHARED_LIBRARY})
-if(WIN32)
-    add_library(FastCompression SHARED lzvn_decode.S lzvn_encode.S shlibmain.c)
-else()
-    add_library(FastCompression SHARED lzvn_decode.S lzvn_encode.S)
-endif()
+add_library(FastCompression SHARED lzvn_decode.S lzvn_encode.S liblzvn.c)
 set_target_properties(FastCompression PROPERTIES
     LINKER_LANGUAGE C
     VERSION ${lzvn_VERSION_MAJOR}.${lzvn_VERSION_MINOR}
     SOVERSION ${lzvn_VERSION_MAJOR})
-add_library(FastCompression_static STATIC lzvn_decode.S lzvn_encode.S)
+add_library(FastCompression_static STATIC lzvn_decode.S lzvn_encode.S liblzvn.c)
 set_target_properties(FastCompression_static PROPERTIES
     OUTPUT_NAME FastCompression)
 
