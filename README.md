@@ -58,6 +58,7 @@ Alternatively you can use cmake:
 
 ```
 mkdir build
+cd build
 cmake ..
 make
 make install
