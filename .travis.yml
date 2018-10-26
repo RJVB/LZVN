@@ -2,9 +2,12 @@
 os:
 - osx
 - linux
+language: C
 script:
 - mkdir build
 - cd build
 - cmake ..
 - make V=1 VERBOSE=1
 - make V=1 VERBOSE=1 install/fast DESTDIR=../destroot
+- ../destroot/usr/local/bin/lzvn lzvns lzvns.lzvn
+- ls -lhtr .
