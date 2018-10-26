@@ -1,0 +1,10 @@
+# @see: https://docs.travis-ci.com/
+os:
+- osx
+- linux
+script:
+- mkdir build
+- cd build
+- cmake ..
+- make V=1 VERBOSE=1
+- make V=1 VERBOSE=1 install/fast DESTDIR=../destroot
