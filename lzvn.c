@@ -278,6 +278,12 @@ int main(int argc, const char * argv[])
 				fileLength = ftell(fp);
 				printf("fileLength...: %ld/0x%08lx - %s\n", fileLength, fileLength, argv[1]);
 				fseek(fp, 0, SEEK_SET);
+                if (fileLength < LZVN_MINIMUM_COMPRESSABLE_SIZE)
+                {
+                    printf("WARNING: files under %d bytes are ignored\n", LZVN_MINIMUM_COMPRESSABLE_SIZE);
+                    fclose(fp);
+                    exit(0);
+                }
 
 				fileBuffer = malloc(fileLength);
 

@@ -12,4 +12,7 @@ extern size_t lzvn_encode(void * dst, size_t dst_size, const void * src, size_t 
 extern size_t lzvn_decode(void * dst, size_t dst_size, const void * src, size_t src_size);
 extern size_t lzvn_encode_work_size(void);
 
+// The (undocumented) minimum filesize under which LZVN compression fails:
+#define LZVN_MINIMUM_COMPRESSABLE_SIZE  8
+
 #endif
